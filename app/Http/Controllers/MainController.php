@@ -54,4 +54,23 @@ class MainController extends Controller
         //redirect ไปที่ /home
         return redirect('/home');
     }
+    public function editData($id)
+    {
+        $todo = Todo::find($id);
+        // dd($todo); คำสั่งเช็คข้อมูล
+        return view("edit")->with("todo",$todo);
+    }
+    public function confirmEdit(Request $request, $id)
+    {
+        //ค้นหา todo ที่มีไอดี = $id (ค่าที่รับมาจาก URL)
+        $newTodo = Todo::find($id);
+
+        //นำค่าที่ผู้ใช้ส่งมาจาก Form เปลี่ยนให้กับข้อมูลที่เพิ่งค้นหาไป
+        $newTodo->todoName = $request->todo;
+        $newTodo->Name = $request->name;
+
+        // บันทึกข้อมูลที่เปลี่ยนลง database
+        $newTodo->save();
+        return redirect("/home");
+    }
 }
