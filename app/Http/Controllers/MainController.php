@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use Illuminate\Http\Request;
 //import โมเดล Todo (Eloquent mode หรือเรียกกันปกติว่าโมเดลดาต้าเบส)
 use App\Models\Todo;
+use App\Models\TodoType;
+
 
 class MainController extends Controller
 {
@@ -14,11 +16,13 @@ class MainController extends Controller
         //ใช้คำสั่ง Todo::All(); และนำข้อมูลที่ถูก return มา เก็บไว้ที่ตัวแปร $todo 
         //(คำสั่ง Models::All(); นี้จะ return ค่าเป็น list หรือ array of objects หรือ ลิสต์ของ object(ก็คือ array ที่เก็บ object ไว้หลายๆตัวนั่นแหละ))
         $todo = Todo::All();
-
+        $types = TodoType::All(); 
+        // dd($types);
         //return ไปที่ view ที่ชื่อว่า "example" (แสดงผล) โดยแนบตัวแปร $todo ซึ่งมีข้อมูลที่เราค้นหาจากดาต้าเบสไปด้วย 
         //ส่งโดยคำสั่ง ->with("todo",$todo) (String แรกในวงเล็บคือชื่อตัวแปรที่เราต้องการตั้ง ตัวที่สองในวงเล็บคือข้อมูลที่ต้องการส่ง 
         //ในบริบทนี้ เราต้องการส่ง $todo โดยกำหนดให้ชื่อว่า "todos")
-        return view('example')->with("todos",$todo);
+
+        return view('example')->with("todos",$todo)->with("types",$types);
     }
 
     //สร้าง function ที่ชื่อว่า addExampleData โดยสามารถเรียกใช้ function นี้ได้ใน router (web.php) 
@@ -32,6 +36,8 @@ class MainController extends Controller
         $exampledata1->todoName = $request->todo;
         //เหมือนกันกับบรรทัดด้านบน แต่เปลี่ยนชื่อตัวแปร
         $exampledata1->Name = $request->name;
+        
+        $exampledata1->type_id = $request->typeid;
         //เรียกใช้ method save(); ซึ่งเป็นการบันทึกข้อมูลตัวนี้ลงดาต้าเบส (เพิ่มข้อมูล)
         $exampledata1->save();
 
